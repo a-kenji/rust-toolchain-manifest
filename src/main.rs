@@ -11,7 +11,7 @@
 //! date of the channel `[CHANNEL]/[date].json`
 //! and a map `[CHANNEL]/since[date]-map.json`,
 //! that can potentially be reused by further channel updates,
-//! in order to not save unneccessary state.
+//! in order to not save unnecessary state.
 //!
 //! The tree of a channel will potentially look like this:
 //! ```text
