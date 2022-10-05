@@ -1,8 +1,8 @@
-use std::collections::HashMap;
+use std::collections::{BTreeMap, HashMap};
 use std::fs::File;
 use std::io::Read;
 
-use serde::{Deserialize, Serialize};
+use serde::{Deserialize, Serialize, Serializer};
 
 use crate::error::RustToolchainError;
 
@@ -10,7 +10,7 @@ use crate::error::RustToolchainError;
 pub(crate) struct PreRelease {
     date: String,
     pkg: HashMap<String, Component>,
-    renames: Option<HashMap<String, Rename>>,
+    renames: HashMap<String, Rename>,
     // profiles: Option<HashMap<String, Vec<String>>>,
 }
 
@@ -38,7 +38,20 @@ pub(crate) struct Rename {
 pub(crate) struct PreReleaseOutputs {
     date: String,
     version: String,
+    #[serde(serialize_with = "ordered_map")]
     components: HashMap<String, Vec<usize>>,
+}
+
+///  A helper function that converts HashMap values into an Ordered Json map upon serialization
+fn ordered_map<K: Ord + Serialize, V: Serialize, S: serde::Serializer>(
+    value: &HashMap<K, V>,
+    serializer: S,
+) -> Result<S::Ok, S::Error>
+where
+    S: Serializer,
+{
+    let ordered: BTreeMap<_, _> = value.iter().collect();
+    ordered.serialize(serializer)
 }
 
 impl PreReleaseOutputs {
@@ -50,8 +63,10 @@ impl PreReleaseOutputs {
 #[derive(Debug, Deserialize, Serialize, PartialEq, Default)]
 pub(crate) struct TargetMap {
     #[serde(flatten)]
+    #[serde(serialize_with = "ordered_map")]
     components: HashMap<String, Vec<String>>,
-    renames: Option<HashMap<String, Rename>>,
+    #[serde(serialize_with = "ordered_map")]
+    renames: HashMap<String, Rename>,
 }
 
 impl TargetMap {
