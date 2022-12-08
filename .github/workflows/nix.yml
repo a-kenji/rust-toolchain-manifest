@@ -57,4 +57,4 @@ jobs:
         extra_nix_config: |
           access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
     - name: "cargo deny"
-      run: nix develop --command cargo deny check licenses bans sources
+      run: nix develop --command cargo deny check licenses sources
