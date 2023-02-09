@@ -16,7 +16,7 @@ lint:
 update-cargo-dependencies:
 	cargo update
 	git add Cargo.lock
-	git commit Cargo.lock -m "update(cargo): `Cargo.lock`"
+	git commit Cargo.lock -m "update(cargo): Cargo.lock"
 
 update-flake-dependencies:
 	nix flake update --commit-lock-file
