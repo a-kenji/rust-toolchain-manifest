@@ -41,7 +41,7 @@ use self::cli::CliArgs;
 use self::error::RustToolchainError;
 use self::release::{Channel, MetaData, PreRelease, PreReleaseOutputs, TargetMap};
 
-const _RUST_RELEASES: &str = "https://api.github.com/repos/rust-lang/rust/tags";
+const RUST_STABLE_RELEASE: &str = "https://static.rust-lang.org/dist/channel-rust-stable.toml";
 const RUST_BETA_PRE_RELEASE: &str = "https://static.rust-lang.org/dist/channel-rust-beta.toml";
 const RUST_NIGHTLY_PRE_RELEASE: &str =
     "https://static.rust-lang.org/dist/channel-rust-nightly.toml";
@@ -62,7 +62,12 @@ fn main() -> Result<(), RustToolchainError> {
             let location = format!("{location}/beta");
             write_pre_release(serialized, &location)?;
         }
-        Channel::Stable => {}
+        Channel::Stable => {
+            let resp = reqwest::blocking::get(RUST_STABLE_RELEASE)?.text()?;
+            let serialized: PreRelease = toml::from_str(&resp)?;
+            let location = format!("{location}/stable");
+            write_pre_release(serialized, &location)?;
+        }
     }
     Ok(())
 }
