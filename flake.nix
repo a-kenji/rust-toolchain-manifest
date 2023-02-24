@@ -1,5 +1,5 @@
 {
-  description = "update-rust-action";
+  description = "rust-toolchain-manifest";
 
   inputs.rust-overlay = {
     url = "github:oxalica/rust-overlay";
