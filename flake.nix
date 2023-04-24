@@ -92,7 +92,7 @@
     in {
       devShells = {
         default = pkgs.mkShell {
-          name = "rust-toolchain-manifest-env";
+          name = "rust-toolchain-manifest";
           buildInputs = shellInputs ++ fmtInputs ++ devInputs ++ buildInputs ++ nativeBuildInputs;
         };
         editorConfigShell = pkgs.mkShell {
