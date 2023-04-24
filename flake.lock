@@ -1,5 +1,21 @@
 {
   "nodes": {
+    "cargo-rdme": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1679258965,
+        "narHash": "sha256-ELJa16bU0bXZ8QeLcjxb+q485ncY/u61muhZZU2kENk=",
+        "owner": "orium",
+        "repo": "cargo-rdme",
+        "rev": "59ada03360243e5c4e97750ae2c7426ae812915c",
+        "type": "github"
+      },
+      "original": {
+        "owner": "orium",
+        "repo": "cargo-rdme",
+        "type": "github"
+      }
+    },
     "flake-utils": {
       "inputs": {
         "systems": "systems"
@@ -32,6 +48,7 @@
     },
     "root": {
       "inputs": {
+        "cargo-rdme": "cargo-rdme",
         "flake-utils": "flake-utils",
         "nixpkgs": "nixpkgs",
         "rust-overlay": "rust-overlay"
