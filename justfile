@@ -25,7 +25,7 @@ update-flake-dependencies:
 	nix flake update --commit-lock-file
 
 doc:
-    cargo doc --open --offline
+    cargo doc --open --offline --document-private-items
 run:
     cargo run
 build:
