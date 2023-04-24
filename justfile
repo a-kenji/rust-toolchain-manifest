@@ -14,6 +14,7 @@ lint:
     cargo clippy
     nix run nixpkgs#typos
     cargo udeps
+    cargo diet
 
 # Update and then commit the `Cargo.lock` file
 update-cargo-dependencies:
