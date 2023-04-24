@@ -6,6 +6,10 @@ description = "Query the official rust release manifests"
 authors = [ "Alexander Kenji Berthold" ]
 license = "MIT"
 include = ["src/main.rs", "LICENSE", "README.md"]
+readme = "README.md"
+repository = "https://github.com/a-kenji/rust-toolchain-manifest"
+documentation = "https://github.com/a-kenji/rust-toolchain-manifest"
+homepage = "https://github.com/a-kenji/rust-toolchain-manifest"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
