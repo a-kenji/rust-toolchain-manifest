@@ -8,6 +8,7 @@ jobs:
   update-rust-toolchain:
     name: "Update rust-toolchain"
     runs-on: ubuntu-latest
+    environment: "update"
     timeout-minutes: 5
     steps:
       - name: Checkout repository
