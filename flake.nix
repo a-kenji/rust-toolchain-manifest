@@ -91,7 +91,8 @@
       update-channel = channel:
         pkgs.writeScriptBin "update-${channel}" ''
           set -x
-           git config --local user.name "github-actions[bot]"
+           git config user.name "github-actions[bot]"
+           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
            nix run -L github:$GITHUB_REPOSITORY \
              --no-write-lock-file \
              -- \
