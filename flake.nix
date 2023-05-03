@@ -21,6 +21,11 @@
     flake-utils.lib.eachDefaultSystem
     (system: let
       pkgs = nixpkgs.legacyPackages.${system};
+      stdenv =
+        if pkgs.stdenv.isLinux
+        then pkgs.stdenvAdapters.useMoldLinker pkgs.stdenv
+        else pkgs.stdenv;
+
       overlays = [(import rust-overlay)];
       rustPkgs = import nixpkgs {
         inherit system overlays;
@@ -104,7 +109,7 @@
         '';
     in {
       devShells = {
-        default = pkgs.mkShell {
+        default = (pkgs.mkShell.override {inherit stdenv;}) {
           name = "rust-toolchain-manifest";
           buildInputs = shellInputs ++ fmtInputs ++ devInputs ++ buildInputs ++ nativeBuildInputs;
         };
@@ -129,7 +134,7 @@
             cargoDepsName = name;
             GIT_DATE = gitDate;
             GIT_REV = gitRev;
-            inherit name version src nativeBuildInputs buildInputs cargoLock;
+            inherit name version src stdenv nativeBuildInputs buildInputs cargoLock;
           };
       };
       ci = {
