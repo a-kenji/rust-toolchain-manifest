@@ -33,6 +33,7 @@ mod cli;
 mod error;
 mod release;
 
+use chrono::{Datelike, Utc};
 use clap::Parser;
 use std::fs::File;
 use std::io::Write;
@@ -49,23 +50,24 @@ const RUST_NIGHTLY_PRE_RELEASE: &str =
 fn main() -> Result<(), RustToolchainError> {
     let opts = CliArgs::parse();
     let location = opts.output();
+    let year = Utc::now().year();
     match opts.channel() {
         Channel::Nightly => {
             let resp = reqwest::blocking::get(RUST_NIGHTLY_PRE_RELEASE)?.text()?;
             let serialized: PreRelease = toml::from_str(&resp)?;
-            let location = format!("{location}/nightly");
+            let location = format!("{location}/nightly/{year}");
             write_pre_release(serialized, &location)?;
         }
         Channel::Beta => {
             let resp = reqwest::blocking::get(RUST_BETA_PRE_RELEASE)?.text()?;
             let serialized: PreRelease = toml::from_str(&resp)?;
-            let location = format!("{location}/beta");
+            let location = format!("{location}/beta/{year}");
             write_pre_release(serialized, &location)?;
         }
         Channel::Stable => {
             let resp = reqwest::blocking::get(RUST_STABLE_RELEASE)?.text()?;
             let serialized: PreRelease = toml::from_str(&resp)?;
-            let location = format!("{location}/stable");
+            let location = format!("{location}/stable/{year}");
             write_pre_release(serialized, &location)?;
         }
     }

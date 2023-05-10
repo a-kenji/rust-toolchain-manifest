@@ -14,6 +14,7 @@ homepage = "https://github.com/a-kenji/rust-toolchain-manifest"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+chrono = "0.4.24"
 clap = { version = "4.2.7", features = ["derive"] }
 reqwest = { version = "0.11.17", features = ["blocking"] }
 semver = { version = "1.0.17", features = ["serde"] }
