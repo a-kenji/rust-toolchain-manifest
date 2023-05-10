@@ -8,19 +8,20 @@
 //! The channel can be either `stable`, `beta`, or `nightly`.
 //!
 //! For `beta` and `nightly` channels components are split up into the
-//! date of the channel `[CHANNEL]/[date].json`
-//! and a map `[CHANNEL]/since[date]-map.json`,
+//! date of the channel `[CHANNEL]/[YEAR]/[date].json`
+//! and a map `[CHANNEL]/[YEAR]/since[date]-map.json`,
 //! that can potentially be reused by further channel updates,
 //! in order to not save unnecessary state.
 //!
 //! The tree of a channel will potentially look like this:
 //! ```text
 //!    nightly
-//!    ├── 2022-10-05.json
-//!    ├── 2022-10-06.json
-//!    ├── 2022-10-07.json
-//!    ├── metadata.json
-//!    └── since-2022-10-05-map.json
+//!    └── 2022
+//!        ├── 2022-10-05.json
+//!        ├── 2022-10-06.json
+//!        ├── 2022-10-07.json
+//!        ├── metadata.json
+//!        └── since-2022-10-05-map.json
 //! ```
 //!
 //! - `metadata.json`:
