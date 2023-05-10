@@ -76,7 +76,7 @@ pub(crate) fn write_pre_release(
     serialized: PreRelease,
     directory: &str,
 ) -> Result<(), RustToolchainError> {
-    std::fs::create_dir_all(&directory)?;
+    std::fs::create_dir_all(directory)?;
     let identifier = <PreRelease as Into<PreReleaseOutputs>>::into(serialized.clone());
     let identifier = identifier.date();
     let mut meta_data: MetaData = serialized.clone().try_into()?;
