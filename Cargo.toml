@@ -22,7 +22,7 @@ serde = { version = "1.0.162", features = ["derive"] }
 serde_derive = "1.0.145"
 serde_json = {version = "1.0.96", features = ["preserve_order"]}
 thiserror = "1.0.39"
-toml = "0.7.3"
+toml = "0.7.4"
 
 [profile.release]
 codegen-units = 1
