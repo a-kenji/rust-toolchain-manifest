@@ -60,6 +60,7 @@
         rustToolchainDevTOML
         pkgs.cargo-deny
         pkgs.cargo-diet
+        pkgs.lychee
         (pkgs.symlinkJoin {
           name = "cargo-udeps-wrapped";
           paths = [pkgs.cargo-udeps];

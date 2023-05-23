@@ -12,9 +12,10 @@ fmt:
 	nix develop .#fmtShell --command treefmt --config-file ./.treefmt.toml --tree-root ./.
 lint:
     cargo clippy
-    nix run nixpkgs#typos
+    -nix run nixpkgs#typos
     cargo udeps
     cargo diet
+    lychee README.md
 
 # Update and then commit the `Cargo.lock` file
 update-cargo-dependencies:
