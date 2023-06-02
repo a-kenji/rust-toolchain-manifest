@@ -1,5 +1,5 @@
 # This file is automatically updated by the `update-rust-toolchain` GitHub Action.
 [toolchain]
-channel = "1.69.0"
+channel = "1.70.0"
 components = [ "clippy" ]
 targets = []
