@@ -6,6 +6,9 @@ alias d := doc
 alias r := run
 alias b := build
 
+_default:
+    just --choose
+
 actionlint:
 	nix develop --command actionlint --ignore 'SC2002'
 fmt:
