@@ -23,19 +23,8 @@ jobs:
         extra_nix_config: |
           access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
     - name: "nix build"
-      run: nix build -Lvv
-  check:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v3
-      with:
-        fetch-depth: 0 # Nix Flakes doesn't work on shallow clones
-    - uses: cachix/install-nix-action@v22
-      with:
-        extra_nix_config: |
-          access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
-    - name: "nix flake check"
-      run: nix flake check -Lvv
+      run: nix build -Lvv --no-update-lock-file --show-trace
+
   clippy:
     runs-on: ubuntu-latest
     steps:
@@ -70,3 +59,15 @@ jobs:
           access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
     - name: "cargo deny"
       run: nix develop --command cargo deny check licenses sources
+  check:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0 # Nix Flakes doesn't work on shallow clones
+    - uses: cachix/install-nix-action@v22
+      with:
+        extra_nix_config: |
+          access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
+    - name: "nix flake check"
+      run: nix flake check -Lvv --no-update-lock-file --show-trace
