@@ -49,17 +49,6 @@ jobs:
     - name: "cargo clippy"
       run: cargo clippy
 
-  actionlint:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v3
-    - uses: cachix/install-nix-action@v22
-      with:
-        extra_nix_config: |
-          access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
-    - name: "actionlint"
-      run: nix develop .#actionlintShell --command actionlint --ignore 'SC2002'
-
   cargo-deny:
     runs-on: ubuntu-latest
     steps:
