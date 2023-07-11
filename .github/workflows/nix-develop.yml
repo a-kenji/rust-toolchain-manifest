@@ -31,6 +31,9 @@ jobs:
       with:
         extra_nix_config: |
           access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
+    - uses: DeterminateSystems/magic-nix-cache-action@v2
+      with:
+        diagnostic-endpoint: ""
     - name: 'nix develop --command "echo hello"'
       run: nix develop
     - name: "ldd version"
@@ -45,5 +48,8 @@ jobs:
         extra_nix_config: |
           access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
         fetch-depth: 0
+    - uses: DeterminateSystems/magic-nix-cache-action@v2
+      with:
+        diagnostic-endpoint: ""
     - name: "treefmt"
       run: nix develop .#fmtShell --command treefmt --fail-on-change --config-file ./.treefmt.toml --tree-root ./.
