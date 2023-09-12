@@ -15,7 +15,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         fetch-depth: 0 # Nix Flakes doesn't work on shallow clones
     - uses: cachix/install-nix-action@v23
@@ -31,7 +31,7 @@ jobs:
   clippy:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         fetch-depth: 0 # Nix Flakes doesn't work on shallow clones
     - uses: cachix/install-nix-action@v23
@@ -47,7 +47,7 @@ jobs:
   cargo-deny:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - uses: cachix/install-nix-action@v23
       with:
         extra_nix_config: |
@@ -60,7 +60,7 @@ jobs:
   check:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         fetch-depth: 0 # Nix Flakes doesn't work on shallow clones
     - uses: cachix/install-nix-action@v23
