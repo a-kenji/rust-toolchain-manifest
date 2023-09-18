@@ -20,7 +20,7 @@ reqwest = { version = "0.11.20", features = ["blocking"] }
 semver = { version = "1.0.18", features = ["serde"] }
 serde = { version = "1.0.188", features = ["derive"] }
 serde_derive = "1.0.145"
-serde_json = {version = "1.0.106", features = ["preserve_order"]}
+serde_json = {version = "1.0.107", features = ["preserve_order"]}
 thiserror = "1.0.48"
 toml = "0.8.0"
 
