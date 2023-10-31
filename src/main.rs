@@ -34,14 +34,16 @@ mod cli;
 mod error;
 mod release;
 
+use std::{fs::File, io::Write};
+
 use chrono::{Datelike, Utc};
 use clap::Parser;
-use std::fs::File;
-use std::io::Write;
 
-use self::cli::CliArgs;
-use self::error::RustToolchainError;
-use self::release::{Channel, MetaData, PreRelease, PreReleaseOutputs, TargetMap};
+use self::{
+    cli::CliArgs,
+    error::RustToolchainError,
+    release::{Channel, MetaData, PreRelease, PreReleaseOutputs, TargetMap},
+};
 
 const RUST_STABLE_RELEASE: &str = "https://static.rust-lang.org/dist/channel-rust-stable.toml";
 const RUST_BETA_PRE_RELEASE: &str = "https://static.rust-lang.org/dist/channel-rust-beta.toml";

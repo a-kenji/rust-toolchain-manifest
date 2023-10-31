@@ -52,4 +52,4 @@ jobs:
       with:
         diagnostic-endpoint: ""
     - name: "treefmt"
-      run: nix develop .#fmtShell --command treefmt --fail-on-change --config-file ./.treefmt.toml --tree-root ./.
+      run: nix develop .#fmtShell --command treefmt --fail-on-change

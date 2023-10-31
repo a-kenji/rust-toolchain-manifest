@@ -3,7 +3,7 @@ name = "rust-toolchain-manifest"
 version = "0.2.2"
 edition = "2021"
 description = "Query the official rust release manifests"
-authors = [ "Alexander Kenji Berthold" ]
+authors = ["Alexander Kenji Berthold"]
 license = "MIT"
 include = ["src/*", "LICENSE", "README.md"]
 readme = "README.md"
@@ -20,7 +20,7 @@ reqwest = { version = "0.11.22", features = ["blocking"] }
 semver = { version = "1.0.20", features = ["serde"] }
 serde = { version = "1.0.189", features = ["derive"] }
 serde_derive = "1.0.145"
-serde_json = {version = "1.0.107", features = ["preserve_order"]}
+serde_json = { version = "1.0.107", features = ["preserve_order"] }
 thiserror = "1.0.50"
 toml = "0.8.2"
 

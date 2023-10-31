@@ -42,7 +42,7 @@ jobs:
       with:
         diagnostic-endpoint: ""
     - name: "cargo clippy"
-      run: cargo clippy
+      run: nix develop --command cargo clippy
 
   cargo-deny:
     runs-on: ubuntu-latest

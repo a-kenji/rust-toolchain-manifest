@@ -12,7 +12,7 @@ _default:
 actionlint:
 	nix develop --command actionlint --ignore 'SC2002'
 fmt:
-	nix develop .#fmtShell --command treefmt --config-file ./.treefmt.toml --tree-root ./.
+	nix develop .#fmtShell --command treefmt
 lint:
     cargo clippy
     -nix run nixpkgs#typos
