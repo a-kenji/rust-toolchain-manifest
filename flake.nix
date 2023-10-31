@@ -7,9 +7,15 @@
     inputs.flake-utils.follows = "flake-utils";
   };
 
+  inputs.crane = {
+    url = "github:ipetkov/crane";
+    inputs.nixpkgs.follows = "nixpkgs";
+  };
+
   outputs = {
     self,
     nixpkgs,
+    crane,
     flake-utils,
     rust-overlay,
   }:
@@ -101,6 +107,38 @@
              git commit -m "$(date)"
              git push
           '';
+        commonArgs = {
+          inherit
+            src
+            buildInputs
+            nativeBuildInputs
+            stdenv
+            version
+            name
+            ;
+          pname = name;
+        };
+        craneLib = (crane.mkLib pkgs).overrideToolchain rustToolchainTOML;
+        cranePackage = craneLib.buildPackage (commonArgs // {});
+        cargoArtifacts = craneLib.buildDepsOnly commonArgs;
+        cargoDoc = craneLib.cargoDoc (commonArgs // {inherit cargoArtifacts;});
+        cargoClippy = craneLib.cargoClippy (
+          commonArgs
+          // {
+            inherit cargoArtifacts;
+            nativeBuildInputs = nativeBuildInputs ++ [rustToolchainDevTOML];
+          }
+        );
+        cargoDeny = craneLib.cargoDeny (
+          commonArgs
+          // {
+            inherit cargoArtifacts;
+            cargoDenyChecks = "licenses sources";
+          }
+        );
+        cargoTarpaulin = craneLib.cargoTarpaulin (
+          commonArgs // {inherit cargoArtifacts;}
+        );
       in {
         devShells = {
           default = (pkgs.mkShell.override {inherit stdenv;}) {
@@ -112,8 +150,11 @@
           actionlintShell = pkgs.mkShell {buildInputs = actionlintInputs;};
           fmtShell = pkgs.mkShell {buildInputs = fmtInputs;};
         };
-        packages = {
-          default = (pkgs.makeRustPlatform {inherit cargo rustc;}).buildRustPackage {
+        packages = rec {
+          default = rust-toolchain-manifest;
+          rust-toolchain-manifest = cranePackage;
+          # Uses nixpkgs native builder
+          upstream = (pkgs.makeRustPlatform {inherit cargo rustc;}).buildRustPackage {
             cargoDepsName = name;
             GIT_DATE = gitDate;
             GIT_REV = gitRev;
@@ -127,6 +168,13 @@
               cargoLock
               ;
           };
+          inherit
+            cargoArtifacts
+            cargoClippy
+            cargoDoc
+            cargoDeny
+            cargoTarpaulin
+            ;
         };
         ci = {
           update-nightly = update-channel "nightly";

@@ -12,7 +12,29 @@ on:
       - '**.md'
 
 jobs:
+  dependencies:
+    runs-on: ubuntu-latest
+    environment: cachix
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    - uses: cachix/install-nix-action@v23
+      with:
+        extra_nix_config: |
+          access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
+    - uses: DeterminateSystems/magic-nix-cache-action@v2
+      with:
+        diagnostic-endpoint: ""
+    - uses: cachix/cachix-action@v12
+      with:
+        name: kenji
+        authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
+    - name: "build dependencies"
+      run: nix build -Lvv --no-update-lock-file --show-trace .#cargoArtifacts
+
   build:
+    needs: dependencies
     runs-on: ubuntu-latest
     environment: cachix
     steps:
@@ -33,13 +55,14 @@ jobs:
     - name: "nix build"
       run: nix build -Lvv --no-update-lock-file --show-trace
 
-  clippy:
+  doc:
+    needs: dependencies
     runs-on: ubuntu-latest
     environment: cachix
     steps:
     - uses: actions/checkout@v4
       with:
-        fetch-depth: 0 # Nix Flakes doesn't work on shallow clones
+        fetch-depth: 0
     - uses: cachix/install-nix-action@v23
       with:
         extra_nix_config: |
@@ -51,14 +74,17 @@ jobs:
       with:
         name: kenji
         authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
-    - name: "cargo clippy"
-      run: nix develop --command cargo clippy
+    - name: "documentation"
+      run: nix build -Lvv --no-update-lock-file --show-trace .#cargoDoc
 
-  cargo-deny:
+  clippy:
+    needs: dependencies
     runs-on: ubuntu-latest
     environment: cachix
     steps:
     - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
     - uses: cachix/install-nix-action@v23
       with:
         extra_nix_config: |
@@ -70,8 +96,31 @@ jobs:
       with:
         name: kenji
         authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
-    - name: "cargo deny"
-      run: nix develop --command cargo deny check licenses sources
+    - name: "clippy"
+      run: nix build -Lvv --no-update-lock-file --show-trace .#cargoClippy
+
+  deny:
+    needs: dependencies
+    runs-on: ubuntu-latest
+    environment: cachix
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    - uses: cachix/install-nix-action@v23
+      with:
+        extra_nix_config: |
+          access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
+    - uses: DeterminateSystems/magic-nix-cache-action@v2
+      with:
+        diagnostic-endpoint: ""
+    - uses: cachix/cachix-action@v12
+      with:
+        name: kenji
+        authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
+    - name: "deny"
+      run: nix build -Lvv --no-update-lock-file --show-trace .#cargoDeny
+
   check:
     runs-on: ubuntu-latest
     environment: cachix
