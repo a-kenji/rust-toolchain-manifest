@@ -1,6 +1,8 @@
-use std::collections::{BTreeMap, HashMap};
-use std::fs::File;
-use std::io::Read;
+use std::{
+    collections::{BTreeMap, HashMap},
+    fs::File,
+    io::Read,
+};
 
 use serde::{Deserialize, Serialize, Serializer};
 

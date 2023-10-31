@@ -25,12 +25,16 @@
         rustPkgs = import nixpkgs {inherit system overlays;};
         src = self;
         RUST_TOOLCHAIN = src + "/rust-toolchain.toml";
+        RUSTFMT_TOOLCHAIN = src + "/.rustfmt-toolchain.toml";
+        rustFmtToolchainTOML =
+          rustPkgs.rust-bin.fromRustupToolchainFile
+          RUSTFMT_TOOLCHAIN;
+
         cargoTOML = builtins.fromTOML (builtins.readFile (src + "/Cargo.toml"));
         inherit (cargoTOML.package) name version;
         rustToolchainTOML = rustPkgs.rust-bin.fromRustupToolchainFile RUST_TOOLCHAIN;
         rustToolchainDevTOML = rustToolchainTOML.override {
           extensions = [
-            "rustfmt"
             "clippy"
             "rust-analysis"
             "rust-docs"
@@ -52,6 +56,7 @@
         nativeBuildInputs = [pkgs.pkg-config];
         devInputs = [
           rustToolchainDevTOML
+          rustFmtToolchainTOML
           pkgs.cargo-deny
           pkgs.cargo-diet
           pkgs.lychee
@@ -75,8 +80,10 @@
           pkgs.actionlint
         ];
         fmtInputs = [
+          rustFmtToolchainTOML
           pkgs.alejandra
           pkgs.treefmt
+          pkgs.taplo
         ];
         editorConfigInputs = [pkgs.editorconfig-checker];
         actionlintInputs = [pkgs.actionlint];
@@ -99,7 +106,7 @@
           default = (pkgs.mkShell.override {inherit stdenv;}) {
             name = "rust-toolchain-manifest";
             buildInputs =
-              shellInputs ++ fmtInputs ++ devInputs ++ buildInputs ++ nativeBuildInputs;
+              shellInputs ++ devInputs ++ fmtInputs ++ buildInputs ++ nativeBuildInputs;
           };
           editorConfigShell = pkgs.mkShell {buildInputs = editorConfigInputs;};
           actionlintShell = pkgs.mkShell {buildInputs = actionlintInputs;};
