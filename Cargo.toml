@@ -21,7 +21,7 @@ semver = { version = "1.0.20", features = ["serde"] }
 serde = { version = "1.0.193", features = ["derive"] }
 serde_derive = "1.0.145"
 serde_json = { version = "1.0.107", features = ["preserve_order"] }
-thiserror = "1.0.50"
+thiserror = "1.0.53"
 toml = "0.8.8"
 
 [profile.release]
