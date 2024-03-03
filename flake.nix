@@ -12,6 +12,8 @@
     inputs.nixpkgs.follows = "nixpkgs";
   };
 
+  inputs.flake-utils.url = "github:numtide/flake-utils";
+
   outputs = {
     self,
     nixpkgs,
@@ -63,6 +65,8 @@
         devInputs = [
           rustToolchainDevTOML
           rustFmtToolchainTOML
+        ];
+        extraInputs = [
           pkgs.cargo-deny
           pkgs.cargo-diet
           pkgs.lychee
@@ -141,14 +145,19 @@
         );
       in {
         devShells = {
-          default = (pkgs.mkShell.override {inherit stdenv;}) {
+          default = (pkgs.mkShellNoCC.override {inherit stdenv;}) {
             name = "rust-toolchain-manifest";
-            buildInputs =
-              shellInputs ++ devInputs ++ fmtInputs ++ buildInputs ++ nativeBuildInputs;
+            packages =
+              devInputs ++ buildInputs ++ nativeBuildInputs;
           };
-          editorConfigShell = pkgs.mkShell {buildInputs = editorConfigInputs;};
-          actionlintShell = pkgs.mkShell {buildInputs = actionlintInputs;};
-          fmtShell = pkgs.mkShell {buildInputs = fmtInputs;};
+          full = (pkgs.mkShellNoCC.override {inherit stdenv;}) {
+            name = "rust-toolchain-manifest-full";
+            packages =
+              shellInputs ++ devInputs ++ fmtInputs ++ buildInputs ++ nativeBuildInputs ++ extraInputs;
+          };
+          editorConfigShell = pkgs.mkShellNoCC {packages = editorConfigInputs;};
+          actionlintShell = pkgs.mkShellNoCC {packages = actionlintInputs;};
+          fmtShell = pkgs.mkShellNoCC {packages = fmtInputs;};
         };
         packages = rec {
           default = rust-toolchain-manifest;
