@@ -35,7 +35,7 @@ jobs:
     - uses: DeterminateSystems/magic-nix-cache-action@v7
       with:
         diagnostic-endpoint: ""
-    - uses: cachix/cachix-action@v14
+    - uses: cachix/cachix-action@v15
       with:
         name: kenji
         authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
@@ -57,7 +57,7 @@ jobs:
     - uses: DeterminateSystems/magic-nix-cache-action@v7
       with:
         diagnostic-endpoint: ""
-    - uses: cachix/cachix-action@v14
+    - uses: cachix/cachix-action@v15
       with:
         name: kenji
         authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
