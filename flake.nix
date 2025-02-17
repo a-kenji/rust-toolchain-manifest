@@ -6,10 +6,7 @@
     inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  inputs.crane = {
-    url = "github:ipetkov/crane";
-    inputs.nixpkgs.follows = "nixpkgs";
-  };
+  inputs.crane.url = "github:ipetkov/crane";
 
   inputs.flake-utils.url = "github:numtide/flake-utils";
 
