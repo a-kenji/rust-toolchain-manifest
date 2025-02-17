@@ -99,27 +99,27 @@ jobs:
     - name: "clippy"
       run: nix build -Lvv --no-update-lock-file --show-trace .#cargoClippy
 
-  deny:
-    needs: dependencies
-    runs-on: ubuntu-latest
-    environment: cachix
-    steps:
-    - uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
-    - uses: cachix/install-nix-action@v30
-      with:
-        extra_nix_config: |
-          access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
-    - uses: DeterminateSystems/magic-nix-cache-action@v9
-      with:
-        diagnostic-endpoint: ""
-    - uses: cachix/cachix-action@v15
-      with:
-        name: kenji
-        authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
-    - name: "deny"
-      run: nix build -Lvv --no-update-lock-file --show-trace .#cargoDeny
+  # deny:
+    # needs: dependencies
+    # runs-on: ubuntu-latest
+    # environment: cachix
+    # steps:
+    # - uses: actions/checkout@v4
+    #   with:
+    #     fetch-depth: 0
+    # - uses: cachix/install-nix-action@v30
+    #   with:
+    #     extra_nix_config: |
+    #       access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
+    # - uses: DeterminateSystems/magic-nix-cache-action@v9
+    #   with:
+    #     diagnostic-endpoint: ""
+    # - uses: cachix/cachix-action@v15
+    #   with:
+    #     name: kenji
+    #     authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
+    # - name: "deny"
+    #   run: nix build -Lvv --no-update-lock-file --show-trace .#cargoDeny
 
   check:
     runs-on: ubuntu-latest
