@@ -26,7 +26,7 @@ jobs:
     - uses: DeterminateSystems/magic-nix-cache-action@v9
       with:
         diagnostic-endpoint: ""
-    - uses: cachix/cachix-action@v15
+    - uses: cachix/cachix-action@v16
       with:
         name: kenji
         authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
@@ -48,7 +48,7 @@ jobs:
     - uses: DeterminateSystems/magic-nix-cache-action@v9
       with:
         diagnostic-endpoint: ""
-    - uses: cachix/cachix-action@v15
+    - uses: cachix/cachix-action@v16
       with:
         name: kenji
         authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
@@ -70,7 +70,7 @@ jobs:
     - uses: DeterminateSystems/magic-nix-cache-action@v9
       with:
         diagnostic-endpoint: ""
-    - uses: cachix/cachix-action@v15
+    - uses: cachix/cachix-action@v16
       with:
         name: kenji
         authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
@@ -92,7 +92,7 @@ jobs:
     - uses: DeterminateSystems/magic-nix-cache-action@v9
       with:
         diagnostic-endpoint: ""
-    - uses: cachix/cachix-action@v15
+    - uses: cachix/cachix-action@v16
       with:
         name: kenji
         authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
@@ -114,7 +114,7 @@ jobs:
     # - uses: DeterminateSystems/magic-nix-cache-action@v9
     #   with:
     #     diagnostic-endpoint: ""
-    # - uses: cachix/cachix-action@v15
+    # - uses: cachix/cachix-action@v16
     #   with:
     #     name: kenji
     #     authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
@@ -135,7 +135,7 @@ jobs:
     - uses: DeterminateSystems/magic-nix-cache-action@v9
       with:
         diagnostic-endpoint: ""
-    - uses: cachix/cachix-action@v15
+    - uses: cachix/cachix-action@v16
       with:
         name: kenji
         authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
