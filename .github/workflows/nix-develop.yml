@@ -32,7 +32,7 @@ jobs:
       with:
         extra_nix_config: |
           access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
-    - uses: DeterminateSystems/magic-nix-cache-action@v9
+    - uses: DeterminateSystems/magic-nix-cache-action@v11
       with:
         diagnostic-endpoint: ""
     - uses: cachix/cachix-action@v16
@@ -54,7 +54,7 @@ jobs:
         extra_nix_config: |
           access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
         fetch-depth: 0
-    - uses: DeterminateSystems/magic-nix-cache-action@v9
+    - uses: DeterminateSystems/magic-nix-cache-action@v11
       with:
         diagnostic-endpoint: ""
     - uses: cachix/cachix-action@v16
