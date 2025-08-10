@@ -12,22 +12,23 @@
 
   inputs.flake-utils.url = "github:numtide/flake-utils";
 
-  outputs =
-    {
-      self,
-      nixpkgs,
-      crane,
-      flake-utils,
-      rust-overlay,
-    }:
+  outputs = {
+    self,
+    nixpkgs,
+    crane,
+    flake-utils,
+    rust-overlay,
+  }:
     flake-utils.lib.eachDefaultSystem (
-      system:
-      let
+      system: let
         pkgs = nixpkgs.legacyPackages.${system};
-        stdenv = if pkgs.stdenv.isLinux then pkgs.stdenvAdapters.useMoldLinker pkgs.stdenv else pkgs.stdenv;
+        stdenv =
+          if pkgs.stdenv.isLinux
+          then pkgs.stdenvAdapters.useMoldLinker pkgs.stdenv
+          else pkgs.stdenv;
 
-        overlays = [ (import rust-overlay) ];
-        rustPkgs = import nixpkgs { inherit system overlays; };
+        overlays = [(import rust-overlay)];
+        rustPkgs = import nixpkgs {inherit system overlays;};
         src = self;
         RUST_TOOLCHAIN = src + "/rust-toolchain.toml";
         RUSTFMT_TOOLCHAIN = src + "/.rustfmt-toolchain.toml";
@@ -42,7 +43,7 @@
             "rust-analysis"
             "rust-docs"
           ];
-          targets = [ ];
+          targets = [];
         };
         gitDate = self.lastModifiedDate;
         gitRev = self.shortRev or "Not committed yet.";
@@ -55,8 +56,8 @@
         rustc = rustToolchainTOML;
         cargo = rustToolchainTOML;
 
-        buildInputs = [ pkgs.openssl ];
-        nativeBuildInputs = [ pkgs.pkg-config ];
+        buildInputs = [pkgs.openssl];
+        nativeBuildInputs = [pkgs.pkg-config];
         devInputs = [
           rustToolchainDevTOML
           rustFmtToolchainTOML
@@ -67,15 +68,15 @@
           pkgs.lychee
           (pkgs.symlinkJoin {
             name = "cargo-udeps-wrapped";
-            paths = [ pkgs.cargo-udeps ];
-            nativeBuildInputs = [ pkgs.makeWrapper ];
+            paths = [pkgs.cargo-udeps];
+            nativeBuildInputs = [pkgs.makeWrapper];
             postBuild = ''
               wrapProgram $out/bin/cargo-udeps \
                 --prefix PATH : ${
-                  pkgs.lib.makeBinPath [
-                    (rustPkgs.rust-bin.selectLatestNightlyWith (toolchain: toolchain.default))
-                  ]
-                }
+                pkgs.lib.makeBinPath [
+                  (rustPkgs.rust-bin.selectLatestNightlyWith (toolchain: toolchain.default))
+                ]
+              }
             '';
           })
           pkgs.cargo-rdme
@@ -90,10 +91,9 @@
           pkgs.treefmt
           pkgs.taplo
         ];
-        editorConfigInputs = [ pkgs.editorconfig-checker ];
-        actionlintInputs = [ pkgs.actionlint ];
-        update-channel =
-          channel:
+        editorConfigInputs = [pkgs.editorconfig-checker];
+        actionlintInputs = [pkgs.actionlint];
+        update-channel = channel:
           pkgs.writeScriptBin "update-${channel}" ''
             set -x
              git config user.name "github-actions[bot]"
@@ -119,14 +119,14 @@
           pname = name;
         };
         craneLib = (crane.mkLib pkgs).overrideToolchain rustToolchainTOML;
-        cranePackage = craneLib.buildPackage (commonArgs // { });
+        cranePackage = craneLib.buildPackage (commonArgs // {});
         cargoArtifacts = craneLib.buildDepsOnly commonArgs;
-        cargoDoc = craneLib.cargoDoc (commonArgs // { inherit cargoArtifacts; });
+        cargoDoc = craneLib.cargoDoc (commonArgs // {inherit cargoArtifacts;});
         cargoClippy = craneLib.cargoClippy (
           commonArgs
           // {
             inherit cargoArtifacts;
-            nativeBuildInputs = nativeBuildInputs ++ [ rustToolchainDevTOML ];
+            nativeBuildInputs = nativeBuildInputs ++ [rustToolchainDevTOML];
           }
         );
         cargoDeny = craneLib.cargoDeny (
@@ -136,27 +136,26 @@
             cargoDenyChecks = "licenses sources";
           }
         );
-        cargoTarpaulin = craneLib.cargoTarpaulin (commonArgs // { inherit cargoArtifacts; });
-      in
-      {
+        cargoTarpaulin = craneLib.cargoTarpaulin (commonArgs // {inherit cargoArtifacts;});
+      in {
         devShells = {
-          default = (pkgs.mkShellNoCC.override { inherit stdenv; }) {
+          default = (pkgs.mkShellNoCC.override {inherit stdenv;}) {
             name = "rust-toolchain-manifest";
             packages = devInputs ++ buildInputs ++ nativeBuildInputs;
           };
-          full = (pkgs.mkShellNoCC.override { inherit stdenv; }) {
+          full = (pkgs.mkShellNoCC.override {inherit stdenv;}) {
             name = "rust-toolchain-manifest-full";
             packages = shellInputs ++ devInputs ++ fmtInputs ++ buildInputs ++ nativeBuildInputs ++ extraInputs;
           };
-          editorConfigShell = pkgs.mkShellNoCC { packages = editorConfigInputs; };
-          actionlintShell = pkgs.mkShellNoCC { packages = actionlintInputs; };
-          fmtShell = pkgs.mkShellNoCC { packages = fmtInputs; };
+          editorConfigShell = pkgs.mkShellNoCC {packages = editorConfigInputs;};
+          actionlintShell = pkgs.mkShellNoCC {packages = actionlintInputs;};
+          fmtShell = pkgs.mkShellNoCC {packages = fmtInputs;};
         };
         packages = rec {
           default = rust-toolchain-manifest;
           rust-toolchain-manifest = cranePackage;
           # Uses nixpkgs native builder
-          upstream = (pkgs.makeRustPlatform { inherit cargo rustc; }).buildRustPackage {
+          upstream = (pkgs.makeRustPlatform {inherit cargo rustc;}).buildRustPackage {
             cargoDepsName = name;
             GIT_DATE = gitDate;
             GIT_REV = gitRev;
