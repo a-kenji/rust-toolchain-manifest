@@ -8,7 +8,6 @@
 
   inputs.crane = {
     url = "github:ipetkov/crane";
-    inputs.nixpkgs.follows = "nixpkgs";
   };
 
   inputs.flake-utils.url = "github:numtide/flake-utils";
@@ -33,9 +32,7 @@
         src = self;
         RUST_TOOLCHAIN = src + "/rust-toolchain.toml";
         RUSTFMT_TOOLCHAIN = src + "/.rustfmt-toolchain.toml";
-        rustFmtToolchainTOML =
-          rustPkgs.rust-bin.fromRustupToolchainFile
-          RUSTFMT_TOOLCHAIN;
+        rustFmtToolchainTOML = rustPkgs.rust-bin.fromRustupToolchainFile RUSTFMT_TOOLCHAIN;
 
         cargoTOML = builtins.fromTOML (builtins.readFile (src + "/Cargo.toml"));
         inherit (cargoTOML.package) name version;
@@ -139,20 +136,16 @@
             cargoDenyChecks = "licenses sources";
           }
         );
-        cargoTarpaulin = craneLib.cargoTarpaulin (
-          commonArgs // {inherit cargoArtifacts;}
-        );
+        cargoTarpaulin = craneLib.cargoTarpaulin (commonArgs // {inherit cargoArtifacts;});
       in {
         devShells = {
           default = (pkgs.mkShellNoCC.override {inherit stdenv;}) {
             name = "rust-toolchain-manifest";
-            packages =
-              devInputs ++ buildInputs ++ nativeBuildInputs;
+            packages = devInputs ++ buildInputs ++ nativeBuildInputs;
           };
           full = (pkgs.mkShellNoCC.override {inherit stdenv;}) {
             name = "rust-toolchain-manifest-full";
-            packages =
-              shellInputs ++ devInputs ++ fmtInputs ++ buildInputs ++ nativeBuildInputs ++ extraInputs;
+            packages = shellInputs ++ devInputs ++ fmtInputs ++ buildInputs ++ nativeBuildInputs ++ extraInputs;
           };
           editorConfigShell = pkgs.mkShellNoCC {packages = editorConfigInputs;};
           actionlintShell = pkgs.mkShellNoCC {packages = actionlintInputs;};
