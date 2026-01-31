@@ -45,7 +45,7 @@ pub(crate) struct PreReleaseOutputs {
 }
 
 ///  A helper function that converts HashMap values into an Ordered Json map upon serialization
-fn ordered_map<K: Ord + Serialize, V: Serialize, S: serde::Serializer>(
+fn ordered_map<K: Ord + Serialize, V: Serialize, S>(
     value: &HashMap<K, V>,
     serializer: S,
 ) -> Result<S::Ok, S::Error>
