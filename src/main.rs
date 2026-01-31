@@ -25,11 +25,11 @@
 //! ```
 //!
 //! - `metadata.json`:
-//! Saves state about the current channel.
+//!   Saves state about the current channel.
 //! - `[date].json`:
-//! Saves state on the channel on the specified `[date]`.
+//!   Saves state on the channel on the specified `[date]`.
 //! - `since-[date]-map.json`:
-//! A helper map, that allows the `[date].json` snapshots of channels to be fairly small.
+//!   A helper map, that allows the `[date].json` snapshots of channels to be fairly small.
 mod cli;
 mod error;
 mod release;
