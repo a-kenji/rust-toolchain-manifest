@@ -8,6 +8,9 @@ use serde::{Deserialize, Serialize, Serializer};
 
 use crate::error::RustToolchainError;
 
+/// The package key for the Rust compiler itself within the manifest's `pkg` map.
+const RUST_PKG_KEY: &str = "rust";
+
 #[derive(Debug, Clone, Deserialize)]
 pub(crate) struct PreRelease {
     date: String,
@@ -120,7 +123,7 @@ impl TryFrom<PreRelease> for MetaData {
     fn try_from(pre_release: PreRelease) -> Result<Self, Self::Error> {
         let version = pre_release
             .pkg
-            .get("rust")
+            .get(RUST_PKG_KEY)
             .unwrap()
             .version
             .to_owned()
@@ -134,11 +137,27 @@ impl TryFrom<PreRelease> for MetaData {
     }
 }
 
+const MANIFEST_BASE_URL: &str = "https://static.rust-lang.org/dist/channel-rust-";
+
 #[derive(Debug, Clone)]
 pub(crate) enum Channel {
     Nightly,
     Beta,
     Stable,
+}
+
+impl Channel {
+    pub(crate) fn manifest_url(&self) -> String {
+        format!("{MANIFEST_BASE_URL}{channel}.toml", channel = self.as_str())
+    }
+
+    pub(crate) fn as_str(&self) -> &'static str {
+        match self {
+            Self::Nightly => "nightly",
+            Self::Beta => "beta",
+            Self::Stable => "stable",
+        }
+    }
 }
 
 impl std::str::FromStr for Channel {
@@ -161,7 +180,7 @@ impl From<PreRelease> for PreReleaseOutputs {
         let date = input.date;
         let version = input
             .pkg
-            .get("rust")
+            .get(RUST_PKG_KEY)
             .unwrap()
             .version
             .to_owned()

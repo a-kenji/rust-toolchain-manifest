@@ -45,35 +45,18 @@ use self::{
     release::{Channel, MetaData, PreRelease, PreReleaseOutputs, TargetMap},
 };
 
-const RUST_STABLE_RELEASE: &str = "https://static.rust-lang.org/dist/channel-rust-stable.toml";
-const RUST_BETA_PRE_RELEASE: &str = "https://static.rust-lang.org/dist/channel-rust-beta.toml";
-const RUST_NIGHTLY_PRE_RELEASE: &str =
-    "https://static.rust-lang.org/dist/channel-rust-nightly.toml";
+const METADATA_FILENAME: &str = "metadata.json";
 
 fn main() -> Result<(), RustToolchainError> {
     let opts = CliArgs::parse();
     let location = opts.output();
     let year = Utc::now().year();
-    match opts.channel() {
-        Channel::Nightly => {
-            let resp = reqwest::blocking::get(RUST_NIGHTLY_PRE_RELEASE)?.text()?;
-            let serialized: PreRelease = toml::from_str(&resp)?;
-            let location = format!("{location}/nightly/{year}");
-            write_pre_release(serialized, &location)?;
-        }
-        Channel::Beta => {
-            let resp = reqwest::blocking::get(RUST_BETA_PRE_RELEASE)?.text()?;
-            let serialized: PreRelease = toml::from_str(&resp)?;
-            let location = format!("{location}/beta/{year}");
-            write_pre_release(serialized, &location)?;
-        }
-        Channel::Stable => {
-            let resp = reqwest::blocking::get(RUST_STABLE_RELEASE)?.text()?;
-            let serialized: PreRelease = toml::from_str(&resp)?;
-            let location = format!("{location}/stable/{year}");
-            write_pre_release(serialized, &location)?;
-        }
-    }
+    let channel = opts.channel();
+
+    let resp = reqwest::blocking::get(channel.manifest_url())?.text()?;
+    let serialized: PreRelease = toml::from_str(&resp)?;
+    let directory = format!("{location}/{channel}/{year}", channel = channel.as_str());
+    write_pre_release(serialized, &directory)?;
     Ok(())
 }
 
@@ -91,7 +74,7 @@ pub(crate) fn write_pre_release(
     file.write_all(outputs.as_bytes())?;
 
     // Read Metadata -> Read Map
-    let prev_map_path = MetaData::try_from_path(&format!("{directory}/metadata.json"))
+    let prev_map_path = MetaData::try_from_path(&format!("{directory}/{METADATA_FILENAME}"))
         // If we error out here, we assume the map has not been written yet
         .unwrap_or_else(|_| MetaData::default())
         .latest_map;
@@ -112,7 +95,7 @@ pub(crate) fn write_pre_release(
         meta_data.set_latest_map(prev_map_path);
     }
 
-    let mut meta_file = File::create(format!("{directory}/metadata.json"))?;
+    let mut meta_file = File::create(format!("{directory}/{METADATA_FILENAME}"))?;
     let outputs = serde_json::to_string(&meta_data)?;
     meta_file.write_all(outputs.as_bytes())?;
     Ok(())
